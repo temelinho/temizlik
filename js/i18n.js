@@ -1,0 +1,513 @@
+/* Alanya Temizlik - Çok Dilli Site (TR / EN / DE / RU) */
+(function () {
+  'use strict';
+
+  var SUPPORTED = ['tr', 'en', 'de', 'ru'];
+  var STORAGE_KEY = 'ct_lang';
+
+  var META = {
+    tr: {
+      title: 'Alanya Ev Temizliği, Ofis Temizliği ve Derin Temizlik | Alanya Temiz',
+      description: "Alanya'da profesyonel ev temizliği, ofis temizliği, derin temizlik, cam temizliği ve inşaat sonrası temizlik hizmeti. Deneyimli ekibimizle Mahmutlar, Kestel, Oba, Tosmur aynı gün hizmet. ☎ 0534 350 36 30"
+    },
+    en: {
+      title: 'Alanya Home Cleaning, Office Cleaning & Deep Cleaning | Alanya Temiz',
+      description: 'Professional home cleaning, office cleaning, deep cleaning, window cleaning and post-construction cleaning services in Alanya. Same-day service with experienced staff. ☎ +90 534 350 36 30'
+    },
+    de: {
+      title: 'Hausreinigung, Büroreinigung und Tiefenreinigung in Alanya | Alanya Temiz',
+      description: 'Professionelle Wohnungsreinigung, Büroreinigung, Tiefenreinigung, Fensterreinigung und Baureinigung in Alanya. Service am selben Tag mit erfahrenem Personal. ☎ +90 534 350 36 30'
+    },
+    ru: {
+      title: 'Уборка квартир, офисов и глубокая чистка в Алании | Alanya Temiz',
+      description: 'Профессиональная уборка квартир, офисов, генеральная уборка, мытье окон и послестроительная уборка в Алании. Обслуживание в тот же день с опытным персоналом. ☎ +90 534 350 36 30'
+    }
+  };
+
+  var TR = {
+    'nav.home': 'Anasayfa',
+    'nav.services': 'Hizmetlerimiz',
+    'nav.why': 'Neden Biz?',
+    'nav.gallery': 'Önce/Sonra',
+    'nav.regions': 'Hizmet Bölgeleri',
+    'nav.contact': 'İletişim',
+    'btn.call': 'Hemen Ara',
+    'btn.whatsapp': "WhatsApp'tan Yaz",
+    'hero.badge': '7/24 Alanya Temizlik Hizmeti',
+    'hero.title': "Alanya'da Profesyonel Ev ve Ofis Temizliği",
+    'hero.subtitle': 'Deneyimli temizlik personellerimiz ile ev temizliği, ofis temizliği, derin temizlik ve cam temizliği dahil her ihtiyacınıza aynı gün, garantili ve güvenilir çözümler sunuyoruz.',
+    'services.tag': 'Uzmanlık Alanlarımız',
+    'services.title': 'Hizmetlerimiz',
+    'services.desc': 'Gündelik ev temizliğinden detaylı inşaat sonrası temizliğe kadar ihtiyacınız olan tüm temizlik hizmetlerini titizlikle sağlıyoruz.',
+    'services.linkText': 'Detaylı Bilgi & Ara',
+    'svc.sale.title': 'Ev Temizliği (Gündelik / Rutin)',
+    'svc.sale.text': 'Evleriniz için günlük veya haftalık rutin temizlik hizmeti. Toz alma, zemin temizliği, mutfak ve banyo dezenfeksiyonu dahil olmak üzere evinizi pırıl pırıl yapıyoruz.',
+    'svc.install.title': 'Ofis & İşyeri Temizliği',
+    'svc.install.text': 'İş yerinizin prestijini ve çalışma ortamının hijyenini artıracak profesyonel ofis temizliği hizmetleri. Esnek çalışma saatlerimize göre mesai saati dışı temizlik seçeneği.',
+    'svc.repair.title': 'Derin Temizlik (Detaylı Temizlik)',
+    'svc.repair.text': 'Dip köşe en ince ayrıntısına kadar yapılan derinlemesine temizlik. Ev veya ofisinizde ulaşılması zor yerler, dolap içleri ve detaylı hijyen gerektiren alanlar temizlenir.',
+    'svc.chem.title': 'Profesyonel Cam Temizliği',
+    'svc.chem.text': 'Ev ve iş yerlerinizin iç ve dış cam yüzeyleri, çerçeveleri ve panjurları lekesiz şekilde temizlenir. Yüksek katlı binalar için özel ekipmanlı hizmet.',
+    'svc.split.title': 'İnşaat Sonrası Temizlik',
+    'svc.split.text': 'Tadilat veya inşaat bitiminde biriken toz, boya kalıntıları, alçı ve çimento artıklarını profesyonel temizlik malzemeleri ile tamamen ortadan kaldırıyoruz.',
+    'svc.vrf.title': 'Villa & Müstakil Ev Temizliği',
+    'svc.vrf.text': 'Büyük ölçekli villa, dubleks veya müstakil evleriniz için geniş ekiplerimizle hızlı ve koordineli temizlik çözümleri sunuyoruz.',
+    'svc.cassette.title': 'Koltuk & Yatak Yıkama',
+    'svc.cassette.text': 'Evde profesyonel vakumlu yıkama makinelerimiz ve özel temizlik şampuanlarımız ile koltuk, yatak ve halılarınızı bakterilerden arındırarak yıkıyoruz.',
+    'svc.salon.title': 'Dezenfeksiyon Hizmeti',
+    'svc.salon.text': 'Sağlık bakanlığı onaylı dezenfektanlar ile ev, ofis veya apartman ortak alanlarınızı virüs ve bakterilere karşı dezenfekte ediyoruz.',
+    'svc.disinfect.title': 'Abonelikli Düzenli Temizlik',
+    'svc.disinfect.text': 'Haftalık, 15 günde bir ya da aylık periyotlarla sabit personelle temizlik aboneliği. Hem daha avantajlı fiyatlar hem de sürekli hijyen garantisi.',
+    'why.tag': 'Neden Alanya Temiz?',
+    'why.title': 'Bizi Neden Tercih Etmelisiniz?',
+    'why.desc': "Alanya genelinde mobil ekiplerimizle ve tecrübeli kadın temizlik işçilerimizle pırıl pırıl, güvenilir ve garantili hizmet sunuyoruz.",
+    'why.card1.title': 'Aynı Gün Hizmet',
+    'why.card1.text': "Alanya içinde hızlı organizasyon sağlayarak ihtiyacınız olan günde adresinize gelip temizlik hizmetini başlatıyoruz.",
+    'why.card2.title': 'Güvenilir Personel',
+    'why.card2.text': 'Ekibimizdeki tüm işçiler referanslı, tecrübeli ve adli sicil kontrolleri yapılmış güvenilir profesyonellerden oluşur.',
+    'why.card3.title': 'Garantili Hijyen',
+    'why.card3.text': 'Temizlik bittiğinde kontrol edersiniz. Beğenmediğiniz veya gözden kaçan bir yer olursa anında telafi ediyor, memnuniyet garanti ediyoruz.',
+    'why.card4.title': 'Şeffaf Fiyatlandırma',
+    'why.card4.text': 'Evinizin büyüklüğü ve yapılacak işleme göre net fiyat veririz. Sonradan sürpriz ek ücret talep etmeyiz.',
+    'gallery.tag': 'Önce / Sonra',
+    'gallery.title': 'Temizlik Sonuçlarımız',
+    'gallery.desc': 'Farklı temizlik işlerimizden öncesi ve sonrası görüntüleri inceleyerek detaylı işçiliğimizi görün.',
+    'gallery.card1': 'Mutfak Tezgâhı ve Yağ Temizliği',
+    'gallery.card2': 'Banyo Derz ve Kireç Temizliği',
+    'gallery.card3': 'Dış Cephe Cam Temizliği',
+    'gallery.card4': 'İnşaat Sonrası Zemin Temizliği',
+    'gallery.card5': 'Koltuk Leke Çıkarma & Yıkama',
+    'gallery.card6': 'Ofis Ortam Hijyeni',
+    'gallery.before': 'Önce',
+    'gallery.after': 'Sonra',
+    'faq.tag': 'Sıkça Sorulanlar',
+    'faq.title': 'Temizlik Hizmeti Hakkında Sorular',
+    'faq.desc': 'Rezervasyon, fiyatlandırma, temizlik malzemeleri ve personelimiz hakkında en çok sorulan soruları yanıtladık.',
+    'faq.q1.q': 'Ev temizliğinde hangi işlemler yapılıyor?',
+    'faq.q1.a': 'Ev temizliğinde genel toz alma, yerlerin silinmesi/süpürülmesi, mutfak dolap kapakları ve tezgâh temizliği, banyo/lavabo dezenfeksiyonu, kapıların silinmesi ve iç cam temizliği standart olarak yapılmaktadır. Detaylı isteklerinizi belirtmeniz yeterlidir.',
+    'faq.q2.q': 'Temizlik sırasında evde bulunmam gerekiyor mu?',
+    'faq.q2.a': 'Hayır, bulunmanız şart değildir. Ekiplerimiz son derece güvenilirdir. Temizlik başlangıcında evi teslim edip, bitişe yakın gelerek kontrol edebilirsiniz. Birçok müşterimiz anahtarı teslim ederek hizmet almaktadır.',
+    'faq.q3.q': 'Temizlik malzemelerini siz mi getiriyorsunuz?',
+    'faq.q3.a': 'İsteğinize bağlıdır. Malzemeli temizlik seçeneğimizde tüm profesyonel temizlik ürünlerini, bezleri ve vakum makinelerini biz getiriyoruz. Malzemesiz seçenekte ise malzemeleri siz temin ediyorsunuz.',
+    'faq.q4.q': 'İnşaat sonrası temizlik ne kadar sürer?',
+    'faq.q4.a': 'İnşaat veya tadilat sonrası temizlikler daha yoğun işçilik gerektirir. Evin büyüklüğüne göre genellikle 1 günde tamamlanacak şekilde yeterli sayıda personel göndererek aynı gün teslim ediyoruz.',
+    'faq.q5.q': "Alanya'da temizlik ücretleri ne kadar?",
+    'faq.q5.a': 'Fiyatlar evin oda sayısına (1+1, 2+1 vb.), m² büyüklüğüne, temizliğin türüne (boş ev, eşyalı ev, inşaat sonrası) ve talep edilen personel sayısına göre değişir. Hemen arayarak dakikalar içinde fiyat alabilirsiniz.',
+    'faq.q6.q': 'Hizmet öncesi ne kadar süre önce rezervasyon yapmalıyım?',
+    'faq.q6.a': 'Genellikle 1-2 gün öncesinden rezervasyon yapılması önerilir. Ancak acil durumlar için aynı gün uygun personelimiz olması halinde birkaç saat içinde de yönlendirme sağlayabiliyoruz.',
+    'faq.q7.q': 'Cam temizliğinde dış cephe camları da dahil mi?',
+    'faq.q7.a': 'Erişilebilir mesafedeki ve güvenli şekilde silinebilecek tüm camları temizliyoruz. Yüksek katlı binalarda açılır kanatlı pencerelerin dış kısımlarını siliyoruz. Tehlikeli alanlar için özel sepetli araç veya vinç organizasyonu yapılabilmektedir.',
+    'faq.q8.q': 'Temizlik personeli güvenilir mi?',
+    'faq.q8.a': 'Evet, çalışanlarımızın tamamı uzun süredir bizimle çalışan, referansları doğrulanmış, adli sicil kayıtları temiz ve güvenilirliği kanıtlanmış kişilerden oluşmaktadır. Güvenliğiniz ve memnuniyetiniz bizim önceliğimizdir.',
+    'regions.tag': 'Yakın Hizmet Noktaları',
+    'regions.title': 'Hizmet Verdiğimiz Bölgeler',
+    'regions.desc': "Mobil servis araçlarımız ve personellerimizle Alanya'nın tüm mahallelerine ve çevre bölgelerine aynı gün temizlik hizmeti sağlıyoruz.",
+    'regions.note': "Alanya'nın tüm mahallelerine ve çevre ilçelerine hızlı ulaşım sağlayan temizlik kadromuz mevcuttur.",
+    'contact.tag': 'İletişime Geçin',
+    'contact.title': 'Bize Ulaşın',
+    'contact.desc': 'Ev ve ofis temizliği randevusu veya bilgi almak için bize telefon, WhatsApp, e-posta veya sosyal medyadan 7/24 ulaşabilirsiniz.',
+    'contact.phone.label': 'Telefon Numarası',
+    'contact.phone.sub': '7/24 Direkt Arama',
+    'contact.wa.label': 'WhatsApp Hattı',
+    'contact.wa.sub': 'Hızlı Rezervasyon ve Bilgi',
+    'contact.mail.label': 'E-posta Adresi',
+    'contact.mail.sub': 'Teklif ve İletişim',
+    'contact.ig.label': 'Instagram',
+    'contact.ig.sub': 'Sosyal Medya Sayfamız',
+    'details.hours.title': 'Çalışma Saatleri',
+    'details.hours.text': '7 Gün 24 Saat Rezervasyon & Koordinasyon',
+    'details.location.title': 'Hizmet Noktası',
+    'details.location.text': "Fiziki ofisimiz bulunmamaktadır. Alanya'nın tüm mahalle ve ilçelerine <strong>adreste adrese mobil temizlik</strong> hizmeti vermekteyiz.",
+    'details.noform.title': 'Neden Form Yok?',
+    'details.noform.text': 'Rezervasyon ve planlama hızlı yapılması gereken bir işlemdir. Size en hızlı sürede uygun günü planlayabilmemiz için form doldurmak yerine doğrudan <strong>Hemen Arayın</strong> veya <strong>WhatsApp üzerinden</strong> iletişime geçin.',
+    'details.cta': '7/24 Tıkla & Ara',
+    'footer.desc': "Alanya'da 7/24 güvenilir ev temizliği, ofis temizliği, inşaat sonrası detaylı temizlik hizmetleri sunan profesyonel çözüm ortağınız. Hijyenik konfor sunuyoruz.",
+    'footer.linksTitle': 'Hızlı Linkler',
+    'footer.galleryLink': 'Önce/Sonra Galeri',
+    'footer.waLink': 'WhatsApp Destek Hattı',
+    'footer.copyright': '© 2026 Alanya Temizlik Hizmetleri. Tüm hakları saklıdır.',
+    'footer.tagline': 'Designed with care for local business SEO.'
+  };
+
+  var EN = {
+    'nav.home': 'Home',
+    'nav.services': 'Our Services',
+    'nav.why': 'Why Us?',
+    'nav.gallery': 'Before/After',
+    'nav.regions': 'Service Areas',
+    'nav.contact': 'Contact',
+    'btn.call': 'Call Now',
+    'btn.whatsapp': 'Message on WhatsApp',
+    'hero.badge': '24/7 Alanya Cleaning Service',
+    'hero.title': 'Professional Home & Office Cleaning in Alanya',
+    'hero.subtitle': 'With our experienced cleaning staff, we provide same-day, guaranteed and reliable solutions for all your needs, including home cleaning, office cleaning, deep cleaning and window cleaning.',
+    'services.tag': 'Our Areas of Expertise',
+    'services.title': 'Our Services',
+    'services.desc': 'From routine daily home cleaning to detailed post-construction cleaning, we meticulously provide all the cleaning services you need.',
+    'services.linkText': 'Learn More & Call',
+    'svc.sale.title': 'Home Cleaning (Daily / Routine)',
+    'svc.sale.text': 'Daily or weekly routine cleaning service for your homes. We make your home sparkling clean, including dusting, floor cleaning, kitchen and bathroom disinfection.',
+    'svc.install.title': 'Office & Business Cleaning',
+    'svc.install.text': 'Professional office cleaning services that will increase the prestige of your workplace and the hygiene of the working environment. Out-of-hours cleaning option according to your schedule.',
+    'svc.repair.title': 'Deep Cleaning (Detailed Cleaning)',
+    'svc.repair.text': 'In-depth cleaning carried out down to the smallest detail. Hard-to-reach places in your home or office, inside cabinets and areas requiring detailed hygiene are cleaned.',
+    'svc.chem.title': 'Professional Window Cleaning',
+    'svc.chem.text': 'Internal and external glass surfaces, frames and shutters of your home and workplace are cleaned without streaks. Special equipped service for high-rise buildings.',
+    'svc.split.title': 'Post-Construction Cleaning',
+    'svc.split.text': 'We completely eliminate accumulated dust, paint residues, plaster and cement remnants at the end of renovation or construction using professional cleaning products.',
+    'svc.vrf.title': 'Villa & Detached House Cleaning',
+    'svc.vrf.text': 'We offer fast and coordinated cleaning solutions with our large teams for your large-scale villas, duplexes or detached houses.',
+    'svc.cassette.title': 'Sofa & Bed Cleaning',
+    'svc.cassette.text': 'We wash your sofas, mattresses and carpets by purifying them from bacteria with our professional vacuum washing machines and special cleaning shampoos at home.',
+    'svc.salon.title': 'Disinfection Service',
+    'svc.salon.text': 'We disinfect your home, office or apartment common areas against viruses and bacteria with disinfectants approved by the Ministry of Health.',
+    'svc.disinfect.title': 'Subscription Regular Cleaning',
+    'svc.disinfect.text': 'Weekly, fortnightly or monthly cleaning subscription with fixed staff. Both more advantageous prices and continuous hygiene guarantee.',
+    'why.tag': 'Why Alanya Temiz?',
+    'why.title': 'Why Choose Us?',
+    'why.desc': 'We offer sparkling, reliable and guaranteed service throughout Alanya with our mobile teams and experienced female cleaning workers.',
+    'why.card1.title': 'Same-Day Service',
+    'why.card1.text': 'By providing fast organization in Alanya, we come to your address and start the cleaning service on the day you need it.',
+    'why.card2.title': 'Trusted Staff',
+    'why.card2.text': 'All workers in our team consist of reliable professionals with references, experience and clean background checks.',
+    'why.card3.title': 'Guaranteed Hygiene',
+    'why.card3.text': 'You check when the cleaning is finished. If there is a place you do not like or that was overlooked, we remedy it immediately and guarantee satisfaction.',
+    'why.card4.title': 'Transparent Pricing',
+    'why.card4.text': 'We give a net price according to the size of your home and the action to be taken. No surprise extra fees afterwards.',
+    'gallery.tag': 'Before / After',
+    'gallery.title': 'Our Cleaning Results',
+    'gallery.desc': 'See our detailed workmanship by reviewing before and after photos of our various cleaning tasks.',
+    'gallery.card1': 'Kitchen Countertop & Grease Cleaning',
+    'gallery.card2': 'Bathroom Joint & Limescale Cleaning',
+    'gallery.card3': 'Exterior Window Cleaning',
+    'gallery.card4': 'Post-Construction Floor Cleaning',
+    'gallery.card5': 'Sofa Stain Removal & Washing',
+    'gallery.card6': 'Office Environment Hygiene',
+    'gallery.before': 'Before',
+    'gallery.after': 'After',
+    'faq.tag': 'Frequently Asked Questions',
+    'faq.title': 'Questions About Cleaning Service',
+    'faq.desc': 'We answered the most frequently asked questions about reservation, pricing, cleaning materials and our staff.',
+    'faq.q1.q': 'What operations are done in home cleaning?',
+    'faq.q1.a': 'In home cleaning, general dusting, wiping/sweeping floors, kitchen cabinet doors and countertop cleaning, bathroom/sink disinfection, wiping doors and internal window cleaning are done as standard. Just state your detailed requests.',
+    'faq.q2.q': 'Do I need to be at home during cleaning?',
+    'faq.q2.a': 'No, it is not required. Our teams are extremely reliable. You can deliver the house at the start of cleaning and come near the end to check. Many of our customers receive service by delivering the key.',
+    'faq.q3.q': 'Do you bring cleaning materials?',
+    'faq.q3.a': 'It depends on your preference. In our cleaning option with materials, we bring all professional cleaning products, cloths and vacuum machines. In the option without materials, you provide the materials.',
+    'faq.q4.q': 'How long does post-construction cleaning take?',
+    'faq.q4.a': 'Post-construction or renovation cleaning requires more intensive work. Depending on the size of the house, we usually send enough personnel to complete it in 1 day and deliver it on the same day.',
+    'faq.q5.q': 'How much are cleaning fees in Alanya?',
+    'faq.q5.a': 'Prices vary depending on the number of rooms in the house (1+1, 2+1 etc.), size in m², type of cleaning (empty house, furnished house, post-construction) and number of personnel requested. Call now to get a price within minutes.',
+    'faq.q6.q': 'How long before service should I make a reservation?',
+    'faq.q6.a': 'It is generally recommended to make a reservation 1-2 days in advance. However, for emergencies, we can also provide direction within a few hours if we have suitable personnel on the same day.',
+    'faq.q7.q': 'Is exterior window cleaning included in window cleaning?',
+    'faq.q7.a': 'We clean all windows that are accessible and can be wiped safely. In high-rise buildings, we wipe the outer parts of opening casement windows. Special basket vehicle or crane organization can be made for dangerous areas.',
+    'faq.q8.q': 'Is cleaning staff reliable?',
+    'faq.q8.a': 'Yes, all of our employees are people who have been working with us for a long time, whose references have been verified, with clean criminal records and proven reliability. Your safety and satisfaction is our priority.',
+    'regions.tag': 'Nearby Service Areas',
+    'regions.title': 'Areas We Serve',
+    'regions.desc': 'With our mobile service vehicles and staff, we provide same-day cleaning service to all neighborhoods of Alanya and surrounding areas.',
+    'regions.note': 'We have a cleaning staff that provides fast access to all neighborhoods and surrounding districts of Alanya.',
+    'contact.tag': 'Get in Touch',
+    'contact.title': 'Contact Us',
+    'contact.desc': 'You can reach us 24/7 by phone, WhatsApp, email or social media to get a home and office cleaning appointment or information.',
+    'contact.phone.label': 'Phone Number',
+    'contact.phone.sub': 'Direct Call 24/7',
+    'contact.wa.label': 'WhatsApp Line',
+    'contact.wa.sub': 'Quick Booking & Info',
+    'contact.mail.label': 'Email Address',
+    'contact.mail.sub': 'Quotes & Contact',
+    'contact.ig.label': 'Instagram',
+    'contact.ig.sub': 'Our Social Media Page',
+    'details.hours.title': 'Working Hours',
+    'details.hours.text': '24/7 Booking & Coordination, 7 Days a Week',
+    'details.location.title': 'Service Location',
+    'details.location.text': 'We do not have a physical office. We provide <strong>on-site mobile cleaning service</strong> to all neighborhoods and districts of Alanya.',
+    'details.noform.title': 'Why No Contact Form?',
+    'details.noform.text': 'Booking and planning is an operation that needs to be done quickly. In order to plan the suitable day for you in the fastest time, please <strong>Call Now</strong> or contact us <strong>via WhatsApp</strong> directly instead of filling out a form.',
+    'details.cta': 'Tap to Call 24/7',
+    'footer.desc': 'Your professional solution partner in Alanya, offering reliable 24/7 home cleaning, office cleaning, detailed post-construction cleaning services. We offer hygienic comfort.',
+    'footer.linksTitle': 'Quick Links',
+    'footer.galleryLink': 'Before/After Gallery',
+    'footer.waLink': 'WhatsApp Support Line',
+    'footer.copyright': '© 2026 Alanya Cleaning Services. All rights reserved.',
+    'footer.tagline': 'Designed with care for local business SEO.'
+  };
+
+  var DE = {
+    'nav.home': 'Startseite',
+    'nav.services': 'Unsere Leistungen',
+    'nav.why': 'Warum wir?',
+    'nav.gallery': 'Vorher/Nachher',
+    'nav.regions': 'Servicegebiete',
+    'nav.contact': 'Kontakt',
+    'btn.call': 'Jetzt anrufen',
+    'btn.whatsapp': 'Auf WhatsApp schreiben',
+    'hero.badge': '24/7 Reinigungsservice in Alanya',
+    'hero.title': 'Professionelle Wohnungs- & Büroreinigung in Alanya',
+    'hero.subtitle': 'Mit unseren erfahrenen Reinigungskräften bieten wir taggleiche, garantierte und zuverlässige Lösungen für alle Ihre Bedürfnisse, einschließlich Wohnungsreinigung, Büroreinigung, Tiefenreinigung und Fensterreinigung.',
+    'services.tag': 'Unsere Fachgebiete',
+    'services.title': 'Unsere Leistungen',
+    'services.desc': 'Von der routinemäßigen täglichen Hausreinigung bis hin zur detaillierten Baureinigung bieten wir Ihnen alle Reinigungsdienste sorgfältig an.',
+    'services.linkText': 'Mehr erfahren & anrufen',
+    'svc.sale.title': 'Hausreinigung (Täglich / Routine)',
+    'svc.sale.text': 'Tägliche oder wöchentliche Routine-Reinigungsdienste für Ihr Zuhause. Wir machen Ihr Zuhause blitzblank, inklusive Staubwischen, Bodenreinigung, Küchen- und Badezimmerdesinfektion.',
+    'svc.install.title': 'Büro- & Geschäftsreinigung',
+    'svc.install.text': 'Professionelle Büroreinigungsdienste zur Steigerung des Prestiges Ihres Arbeitsplatzes und der Hygiene des Arbeitsumfelds. Reinigung außerhalb der Geschäftszeiten nach Absprache.',
+    'svc.repair.title': 'Tiefenreinigung (Detailreinigung)',
+    'svc.repair.text': 'Gründliche Reinigung bis ins kleinste Detail. Schwer zugängliche Stellen in Haus oder Büro, Schrankinnenräume und Bereiche, die eine detaillierte Hygiene erfordern, werden gereinigt.',
+    'svc.chem.title': 'Professionelle Fensterreinigung',
+    'svc.chem.text': 'Innen- und Außenfenster, Rahmen und Jalousien Ihres Hauses oder Büros werden streifenfrei gereinigt. Spezieller Ausrüstungsservice für Hochhäuser.',
+    'svc.split.title': 'Baureinigung (Nach Bau/Umbau)',
+    'svc.split.text': 'Wir beseitigen Baustaub, Farbreste, Gips und Zement nach Renovierung oder Bau mit professionellen Reinigungsmitteln komplett.',
+    'svc.vrf.title': 'Villa- & Hausreinigung',
+    'svc.vrf.text': 'Wir bieten schnelle und koordinierte Reinigungslösungen mit unseren großen Teams für Villen, Maisonetten oder Einfamilienhäuser.',
+    'svc.cassette.title': 'Polster- & Matratzenreinigung',
+    'svc.cassette.text': 'Wir waschen Ihre Sofas, Matratzen und Teppiche und befreien sie von Bakterien mit unseren professionellen Vakuum-Waschmaschinen und speziellen Shampoos.',
+    'svc.salon.title': 'Desinfektionsdienst',
+    'svc.salon.text': 'Wir desinfizieren Ihr Haus, Büro oder Treppenhaus gegen Viren und Bakterien mit vom Gesundheitsministerium zugelassenen Desinfektionsmitteln.',
+    'svc.disinfect.title': 'Abonnement Regelmäßige Reinigung',
+    'svc.disinfect.text': 'Wöchentliches, zweiwöchentliches oder monatliches Reinigungsabonnement mit festem Personal. Günstigere Preise und ständige Hygienegarantie.',
+    'why.tag': 'Warum Alanya Temiz?',
+    'why.title': 'Warum sollten Sie uns wählen?',
+    'why.desc': 'Wir bieten blitzsauberen, zuverlässigen und garantierten Service in ganz Alanya mit unseren mobilen Teams und erfahrenen Reinigungskräften.',
+    'why.card1.title': 'Service am selben Tag',
+    'why.card1.text': 'Durch die schnelle Organisation in Alanya kommen wir an dem Tag, an dem Sie uns brauchen, zu Ihnen nach Hause.',
+    'why.card2.title': 'Zuverlässiges Personal',
+    'why.card2.text': 'Alle Mitarbeiter in unserem Team sind zuverlässige Profis mit Referenzen, Erfahrung und einwandfreiem Leumund.',
+    'why.card3.title': 'Garantierte Hygiene',
+    'why.card3.text': 'Sie kontrollieren nach der Reinigung. Wenn es eine Stelle gibt, die Ihnen nicht gefällt oder übersehen wurde, beheben wir das sofort und garantieren Zufriedenheit.',
+    'why.card4.title': 'Transparente Preise',
+    'why.card4.text': 'Wir nennen einen Festpreis je nach Größe des Hauses und Aufwand. Keine versteckten Zusatzkosten im Nachhinein.',
+    'gallery.tag': 'Vorher / Nachher',
+    'gallery.title': 'Unsere Reinigungsergebnisse',
+    'gallery.desc': 'Überzeugen Sie sich von unserer Detailarbeit anhand von Vorher-Nachher-Bildern unserer Reinigungsaufträge.',
+    'gallery.card1': 'Küchenarbeitsplatten- & Fettreinigung',
+    'gallery.card2': 'Badfugen- & Kalkreinigung',
+    'gallery.card3': 'Fensteraußenreinigung',
+    'gallery.card4': 'Bodenreinigung nach dem Bau',
+    'gallery.card5': 'Fleckenentfernung & Sofawäsche',
+    'gallery.card6': 'Bürohygiene',
+    'gallery.before': 'Vorher',
+    'gallery.after': 'Nachher',
+    'faq.tag': 'Häufig gestellte Fragen',
+    'faq.title': 'Fragen zum Reinigungsservice',
+    'faq.desc': 'Wir haben die am häufigsten gestellten Fragen zu Buchung, Preisen, Reinigungsmitteln und unserem Personal beantwortet.',
+    'faq.q1.q': 'Welche Arbeiten werden bei der Hausreinigung durchgeführt?',
+    'faq.q1.a': 'Bei der Hausreinigung werden standardmäßig Staubwischen, Wischen/Saugen der Böden, Reinigung der Küchenschränke und Arbeitsplatten, Desinfektion von Bad/WC, Wischen der Türen und Innenfensterreinigung durchgeführt. Nennen Sie uns einfach Ihre Wünsche.',
+    'faq.q2.q': 'Muss ich während der Reinigung zu Hause sein?',
+    'faq.q2.a': 'Nein, das ist nicht erforderlich. Unsere Teams sind absolut zuverlässig. Sie können das Haus zu Beginn übergeben und gegen Ende zur Kontrolle wiederkommen. Viele Kunden übergeben uns einfach den Schlüssel.',
+    'faq.q3.q': 'Bringen Sie die Reinigungsmittel mit?',
+    'faq.q3.a': 'Das hängt von Ihrer Wahl ab. Bei der Option mit Material bringen wir alle professionellen Produkte, Tücher und Staubsauger mit. Bei der Option ohne Material stellen Sie die Mittel bereit.',
+    'faq.q4.q': 'Wie lange dauert die Reinigung nach dem Bau?',
+    'faq.q4.a': 'Die Reinigung nach Bauarbeiten oder Renovierungen erfordert intensivere Arbeit. Je nach Hausgröße schicken wir in der Regel genügend Personal, um sie an einem Tag fertigzustellen.',
+    'faq.q5.q': 'Wie hoch sind die Reinigungskosten in Alanya?',
+    'faq.q5.a': 'Die Preise variieren je nach Zimmeranzahl (1+1, 2+1 usw.), m²-Größe, Art der Reinigung (leere Wohnung, möblierte Wohnung, nach Bau) und gewünschter Personalanzahl. Rufen Sie jetzt an, um in wenigen Minuten einen Preis zu erhalten.',
+    'faq.q6.q': 'Wie lange im Voraus sollte ich buchen?',
+    'faq.q6.a': 'Es wird generell empfohlen, 1-2 Tage im Voraus zu buchen. Für Notfälle können wir bei freiem Personal am selben Tag auch innerhalb weniger Stunden jemanden schicken.',
+    'faq.q7.q': 'Ist die Außenfensterreinigung inbegriffen?',
+    'faq.q7.a': 'Wir reinigen alle Fenster, die zugänglich sind und sicher gewischt werden können. In Hochhäusern wischen wir die Außenseiten von zu öffnenden Fenstern. Für gefährliche Bereiche kann ein Hubsteiger organisiert werden.',
+    'faq.q8.q': 'Ist das Reinigungspersonal vertrauenswürdig?',
+    'faq.q8.a': 'Ja, alle unsere Mitarbeiter arbeiten seit langem mit uns zusammen, sind referenzgeprüft, polizeilich ohne Eintragungen und absolut zuverlässig. Ihre Sicherheit hat Priorität.',
+    'regions.tag': 'Nahegelegene Servicegebiete',
+    'regions.title': 'Von uns bediente Gebiete',
+    'regions.desc': 'Mit unseren mobilen Servicefahrzeugen und unserem Personal bieten wir allen Stadtteilen Alanyas und den umliegenden Gebieten taggleichen Service.',
+    'regions.note': 'Wir verfügen über Reinigungskräfte, die alle Stadtteile Alanyas und die umliegenden Bezirke schnell erreichen.',
+    'contact.tag': 'Kontakt',
+    'contact.title': 'Kontaktieren Sie uns',
+    'contact.desc': 'Sie erreichen uns rund um die Uhr per Telefon, WhatsApp, E-Mail oder Social Media, um einen Termin zu vereinbaren oder Informationen zu erhalten.',
+    'contact.phone.label': 'Telefonnummer',
+    'contact.phone.sub': 'Direktanruf rund um die Uhr',
+    'contact.wa.label': 'WhatsApp-Nummer',
+    'contact.wa.sub': 'Schnelle Buchung & Infos',
+    'contact.mail.label': 'E-Mail-Adresse',
+    'contact.mail.sub': 'Angebote & Kontakt',
+    'contact.ig.label': 'Instagram',
+    'contact.ig.sub': 'Unsere Social-Media-Seite',
+    'details.hours.title': 'Öffnungszeiten',
+    'details.hours.text': '24/7 Buchung & Koordination, 7 Tage die Woche',
+    'details.location.title': 'Serviceort',
+    'details.location.text': 'Wir haben kein physisches Büro. Wir bieten <strong>mobilen Service vor Ort</strong> in allen Stadtteilen und Bezirken Alanyas.',
+    'details.noform.title': 'Warum kein Kontaktformular?',
+    'details.noform.text': 'Buchung und Planung müssen schnell gehen. Um den passenden Tag schnellstmöglich zu planen, <strong>rufen Sie uns bitte direkt an</strong> oder kontaktieren Sie uns <strong>über WhatsApp</strong>.',
+    'details.cta': 'Rund um die Uhr anrufen',
+    'footer.desc': 'Ihr professioneller Partner in Alanya für zuverlässige 24/7-Hausreinigung, Büroreinigung und Baureinigung. Wir sorgen für hygienischen Komfort.',
+    'footer.linksTitle': 'Schnelllinks',
+    'footer.galleryLink': 'Vorher/Nachher-Galerie',
+    'footer.waLink': 'WhatsApp-Support',
+    'footer.copyright': '© 2026 Alanya Reinigungsdienste. Alle Rechte vorbehalten.',
+    'footer.tagline': 'Mit Sorgfalt für lokales Business-SEO gestaltet.'
+  };
+
+  var RU = {
+    'nav.home': 'Главная',
+    'nav.services': 'Наши услуги',
+    'nav.why': 'Почему мы?',
+    'nav.gallery': 'До/После',
+    'nav.regions': 'Зоны обслуживания',
+    'nav.contact': 'Контакты',
+    'btn.call': 'Позвонить сейчас',
+    'btn.whatsapp': 'Написать в WhatsApp',
+    'hero.badge': '24/7 Услуги уборки в Алании',
+    'hero.title': 'Профессиональная уборка квартир и офисов в Алании',
+    'hero.subtitle': 'С нашим опытным персоналом мы предлагаем оперативные, гарантированные и надежные решения для всех ваших потребностей, включая уборку дома, офиса, генеральную уборку и мытье окон.',
+    'services.tag': 'Наши направления',
+    'services.title': 'Наши услуги',
+    'services.desc': 'От регулярной ежедневной уборки квартир до детальной уборки после строительства — мы тщательно предоставляем все виды клининговых услуг.',
+    'services.linkText': 'Подробнее и позвонить',
+    'svc.sale.title': 'Уборка квартир (ежедневная / рутинная)',
+    'svc.sale.text': 'Ежедневная или еженедельная поддерживающая уборка вашего жилья. Пылеудаление, мытье полов, дезинфекция кухни и ванной комнаты.',
+    'svc.install.title': 'Уборка офисов и предприятий',
+    'svc.install.text': 'Профессиональный клининг для поддержания престижа вашего бизнеса и гигиены на рабочих местах. Возможность уборки во внерабочее время по согласованию.',
+    'svc.repair.title': 'Генеральная уборка (детальная)',
+    'svc.repair.text': 'Глубокая чистка каждого уголка жилья. Очищаются труднодоступные места, внутренние поверхности шкафов и зоны, требующие особой гигиены.',
+    'svc.chem.title': 'Профессиональное мытье окон',
+    'svc.chem.text': 'Мытье внутренних и внешних оконных стекол, рам и жалюзи без разводов. Специальное оборудование для высотных работ.',
+    'svc.split.title': 'Послестроительная уборка',
+    'svc.split.text': 'Полное удаление строительной пыли, остатков краски, шпаклевки и цемента с помощью профессиональных чистящих средств.',
+    'svc.vrf.title': 'Уборка вилл и загородных домов',
+    'svc.vrf.text': 'Быстрые и скоординированные клининговые решения силами больших бригад для крупных объектов, вилл и коттеджей.',
+    'svc.cassette.title': 'Химчистка диванов и матрасов',
+    'svc.cassette.text': 'Глубокая очистка мягкой мебели и матрасов от пылевых клещей и пятен на дому с помощью профессиональных экстракторов.',
+    'svc.salon.title': 'Услуги дезинфекции',
+    'svc.salon.text': 'Обработка квартир, офисов или подъездов против вирусов и бактерий средствами, одобренными Министерством здравоохранения.',
+    'svc.disinfect.title': 'Регулярная уборка по подписке',
+    'svc.disinfect.text': 'Еженедельный, двухнедельный или ежемесячный клининг с закрепленным сотрудником. Более выгодные цены и постоянная чистота.',
+    'why.tag': 'Почему Alanya Temiz?',
+    'why.title': 'Почему выбирают нас?',
+    'why.desc': 'Мы предлагаем безупречный, надежный и гарантированный сервис по всей Алании силами наших мобильных бригад и опытного персонала.',
+    'why.card1.title': 'Обслуживание в тот же день',
+    'why.card1.text': 'Благодаря оперативной координации в Алании мы выезжаем на объект в тот же день, когда вам требуется уборка.',
+    'why.card2.title': 'Надежные сотрудники',
+    'why.card2.text': 'Все клинеры в нашей команде — проверенные профессионалы с рекомендациями, опытом и чистой историей.',
+    'why.card3.title': 'Гарантия гигиены',
+    'why.card3.text': 'Вы принимаете работу. Если что-то не понравится или было упущено, мы немедленно устраним недостатки на месте.',
+    'why.card4.title': 'Прозрачные цены',
+    'why.card4.text': 'Называем точную цену в зависимости от площади жилья и объема работ. Никаких скрытых наценок после выполнения.',
+    'gallery.tag': 'До / После',
+    'gallery.title': 'Результаты нашей работы',
+    'gallery.desc': 'Оцените качество нашей детальной работы по фотографиям до и после выполнения уборки.',
+    'gallery.card1': 'Очистка кухонной столешницы и жира',
+    'gallery.card2': 'Очистка швов в ванной и известкового налета',
+    'gallery.card3': 'Внешнее мытье окон',
+    'gallery.card4': 'Очистка полов после строительства',
+    'gallery.card5': 'Выведение пятен и чистка дивана',
+    'gallery.card6': 'Гигиена офисного пространства',
+    'gallery.before': 'До',
+    'gallery.after': 'После',
+    'faq.tag': 'Часто задаваемые вопросы',
+    'faq.title': 'Вопросы об услугах уборки',
+    'faq.desc': 'Мы ответили на самые популярные вопросы о бронировании, ценах, моющих средствах и нашем персонале.',
+    'faq.q1.q': 'Что входит в стандартную уборку квартиры?',
+    'faq.q1.a': 'Стандартная уборка включает обеспыливание поверхностей, мытье полов, протирку фасадов шкафов на кухне, дезинфекцию санузлов, протирку дверей и мытье окон изнутри. Дополнительные пожелания согласовываются.',
+    'faq.q2.q': 'Нужно ли мне находиться дома во время уборки?',
+    'faq.q2.a': 'Нет, это не обязательно. Вы можете впустить персонал, уйти по делам и вернуться к завершению для проверки качества. Многие клиенты просто передают нам ключи.',
+    'faq.q3.q': 'Вы привозите свои моющие средства?',
+    'faq.q3.a': 'По вашему выбору. При заказе уборки с материалами мы привозим всю профессиональную химию, протирочные материалы и пылесосы. В ином случае средства предоставляет заказчик.',
+    'faq.q4.q': 'Сколько времени занимает послестроительная уборка?',
+    'faq.q4.a': 'Уборка после ремонта требует больше времени. В зависимости от площади объекта мы направляем бригаду нужной численности, чтобы завершить работы за 1 день.',
+    'faq.q5.q': 'Сколько стоит уборка в Алании?',
+    'faq.q5.a': 'Стоимость зависит от количества комнат, площади в м², типа уборки (после жильцов, после ремонта, генеральная) и числа сотрудников. Позвоните нам, и мы рассчитаем стоимость за пару минут.',
+    'faq.q6.q': 'За сколько дней нужно делать заказ?',
+    'faq.q6.a': 'Рекомендуется делать заказ за 1-2 дня. Однако при наличии свободных клинеров мы можем организовать выезд в день обращения в течение нескольких часов.',
+    'faq.q7.q': 'Входит ли мытье окон снаружи в высотных домах?',
+    'faq.q7.a': 'Мы моем все окна, к которым есть безопасный доступ. В высотных домах моются наружные стекла открывающихся створок. Для глухих стекол на высоте возможен наем автовышки.',
+    'faq.q8.q': 'Надежен ли персонал?',
+    'faq.q8.a': 'Да, все наши сотрудники работают с нами давно, прошли проверку рекомендаций и криминального прошлого, доказав свою честность и профессионализм.',
+    'regions.tag': 'Ближайшие зоны обслуживания',
+    'regions.title': 'Где мы работаем',
+    'regions.desc': 'С нашими мобильными бригадами мы предоставляем услуги уборки в тот же день во всех районах Алании и окрестностях.',
+    'regions.note': 'У нас работают специалисты, которые быстро добираются в любой район Алании и близлежащие округа.',
+    'contact.tag': 'Свяжитесь с нами',
+    'contact.title': 'Связаться с нами',
+    'contact.desc': 'Вы можете связаться с нами круглосуточно по телефону, WhatsApp, электронной почте или в соцсетях для заказа уборки.',
+    'contact.phone.label': 'Номер телефона',
+    'contact.phone.sub': 'Прямой звонок 24/7',
+    'contact.wa.label': 'Линия WhatsApp',
+    'contact.wa.sub': 'Быстрое бронирование',
+    'contact.mail.label': 'Электронная почта',
+    'contact.mail.sub': 'Запросы и контакты',
+    'contact.ig.label': 'Instagram',
+    'contact.ig.sub': 'Наша страница в соцсетях',
+    'details.hours.title': 'Часы работы',
+    'details.hours.text': '24/7 Прием заявок и координация, 7 дней в неделю',
+    'details.location.title': 'Место обслуживания',
+    'details.location.text': 'У нас нет физического офиса. Мы предоставляем <strong>выездной клининг на объекте</strong> во всех районах и округах Алании.',
+    'details.noform.title': 'Почему нет формы заказа?',
+    'details.noform.text': 'Планирование клининга требует быстрого уточнения деталей. Чтобы мы могли сразу подобрать удобный день, пожалуйста, <strong>позвоните нам</strong> или напишите <strong>в WhatsApp</strong> напрямую.',
+    'details.cta': 'Нажмите и позвоните 24/7',
+    'footer.desc': 'Ваш профессиональный партнер в Алании по надежной уборке квартир, офисов и послестроительному клинингу 24/7. Обеспечиваем гигиенический комфорт.',
+    'footer.linksTitle': 'Быстрые ссылки',
+    'footer.galleryLink': 'Галерея До/После',
+    'footer.waLink': 'Линия поддержки WhatsApp',
+    'footer.copyright': '© 2026 Клининговые услуги в Алании. Все права защищены.',
+    'footer.tagline': 'Разработано с заботой о локальном SEO для бизнеса.'
+  };
+
+  var TRANSLATIONS = { tr: TR, en: EN, de: DE, ru: RU };
+
+  function detectLanguage() {
+    try {
+      var saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
+    } catch (e) { /* localStorage unavailable, ignore */ }
+
+    var nav = (navigator.language || navigator.userLanguage || 'tr').toLowerCase().slice(0, 2);
+    if (SUPPORTED.indexOf(nav) !== -1) return nav;
+    return 'tr';
+  }
+
+  function applyLanguage(lang) {
+    if (SUPPORTED.indexOf(lang) === -1) lang = 'tr';
+    var dict = TRANSLATIONS[lang];
+
+    var textNodes = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < textNodes.length; i++) {
+      var el = textNodes[i];
+      var key = el.getAttribute('data-i18n');
+      if (dict[key]) el.textContent = dict[key];
+    }
+
+    var htmlNodes = document.querySelectorAll('[data-i18n-html]');
+    for (var j = 0; j < htmlNodes.length; j++) {
+      var elH = htmlNodes[j];
+      var keyH = elH.getAttribute('data-i18n-html');
+      if (dict[keyH]) elH.innerHTML = dict[keyH];
+    }
+
+    document.documentElement.setAttribute('lang', lang);
+
+    var meta = META[lang];
+    if (meta) {
+      if (document.title !== undefined) document.title = meta.title;
+      var metaDesc = document.getElementById('metaDescription');
+      if (metaDesc) metaDesc.setAttribute('content', meta.description);
+    }
+
+    var buttons = document.querySelectorAll('.lang-btn');
+    for (var k = 0; k < buttons.length; k++) {
+      var btn = buttons[k];
+      var isActive = btn.getAttribute('data-lang') === lang;
+      btn.classList.toggle('active', isActive);
+      if (isActive) btn.setAttribute('aria-current', 'true');
+      else btn.removeAttribute('aria-current');
+    }
+
+    try { window.localStorage.setItem(STORAGE_KEY, lang); } catch (e) { /* ignore */ }
+  }
+
+  function setupSwitchers() {
+    var buttons = document.querySelectorAll('.lang-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', function () {
+        var lang = this.getAttribute('data-lang');
+        applyLanguage(lang);
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    setupSwitchers();
+    applyLanguage(detectLanguage());
+  });
+})();

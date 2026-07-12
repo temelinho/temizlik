@@ -1,0 +1,16 @@
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editör ayarları
+.vscode/
+.idea/
+
+# Geçici dosyalar
+*.log
+*.tmp
+
+# Yedek klasörleri
+gunes-klima-backup-*/
+gunes-klima-bozulmus/

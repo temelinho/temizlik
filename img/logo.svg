@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 50" width="220" height="50" aria-label="Alanya Temizlik Logo">
+  <!-- Sembol (Ev ve Parıltı/Temizlik Kombinasyonu) -->
+  <g transform="translate(5, 5)">
+    <!-- Arka Plan Su Damlası / Yaprak Formu -->
+    <path d="M 20,4 C 28,12 34,18 34,26 C 34,33.7 27.7,40 20,40 C 12.3,40 6,33.7 6,26 C 6,18 12,12 20,4 Z" fill="#E0F2F1" />
+    
+    <!-- Ev Sileti -->
+    <path d="M 14,28 L 14,22 L 20,17 L 26,22 L 26,28 Z" fill="none" stroke="#00897B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+    <!-- Parıltı / Yıldız Efektleri -->
+    <path d="M 24,14 L 25,12 L 27,11 L 25,10 L 24,8 L 23,10 L 21,11 L 23,12 Z" fill="#004D40" />
+    <path d="M 13,18 L 13.5,17 L 14.5,16.5 L 13.5,16 L 13,15 L 12.5,16 L 11.5,16.5 L 12.5,17 Z" fill="#00897B" />
+  </g>
+  
+  <!-- Logotip Metni -->
+  <text x="55" y="32" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800" fill="#004D40" letter-spacing="0.5">ALANYA</text>
+  <text x="135" y="32" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="400" fill="#00897B" letter-spacing="0.5">TEMİZ</text>
+</svg>
